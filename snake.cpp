@@ -1,3 +1,9 @@
+// @BOOK{princeCVMLI2012,
+// author = {Prince, S.J.D.},
+// title= {{Computer Vision: Models Learning and Inference}},
+// publisher = {{Cambridge University Press}},
+// year = 2012}
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -27,14 +33,41 @@ double vector_norm2(const W_t::value_type& p)
     return sqrt(pow(p.x,2) + pow(p.y,2));
 }
 
+// Formula 17.5
 double space(const W_t& W, const size_t& N, const size_t& n)
 {
-    double a = 0;
+    double consecutive_distance_average = 0;
     for( size_t i = 1; i<= N; i++ ) {
-        a += vector_norm2(W[i]-W[i-1]);
+        consecutive_distance_average += vector_norm2(W[i]-W[i-1]);
     }
-    a /= N;
-    return -pow(a-vector_norm2(W[n]-W[n-1]),2);
+    consecutive_distance_average /= N;
+    return -pow(consecutive_distance_average-vector_norm2(W[n]-W[n-1]),2);
+}
+
+// Formula 17.6
+double curve(const W_t& W, const size_t& n)
+{
+    return -pow(vector_norm2(W[n-1]-2*W[n]+W[n+1]),2);
+}
+
+// Formula 17.4
+double prior(const W_t& W, const size_t& N, const double& alpha, const double& beta)
+{
+    double result = 1;
+    for ( size_t n = 1; n <= N; n++ ) {
+        result *= exp(alpha*space(W,N,n)+beta*curve(W,n));
+    }
+    return result;
+}
+
+// Formula 17.3
+double likelihood(const cv::Mat& distance_img, const W_t& W, const size_t& N)
+{
+    double result = 1;
+    for ( size_t n = 1; n <= N; n++ ) {
+        result *= exp(-pow(distance_from_edge(distance_img,W[n]),2));
+    }
+    return result;
 }
 
 int main( int argc, char** argv )
@@ -94,13 +127,14 @@ int main( int argc, char** argv )
     cv::Point2d w_center(circles[selected_circle][0],circles[selected_circle][1]);
     double radius = circles[selected_circle][2];
     const size_t N = 10;
-    W_t W(N+1);
+    W_t W(N+2);
     for ( size_t i = 1; i <= N; i++ ) {
         const double a = i*2*M_PI/N;
         W[i].x = w_center.x + radius*cos(a);
         W[i].y = w_center.y + radius*sin(a);
     }
     W[0] = W[N];
+    W[N+1] = W[1];
 
     for ( size_t i = 1; i <= N; i++ ) {
         circle( hough, W[i], 3, Scalar(255,255,255));
@@ -109,9 +143,8 @@ int main( int argc, char** argv )
     namedWindow( "circles", WINDOW_AUTOSIZE );
     imshow( "circles", hough );
 
-    for ( size_t i = 1; i <= N; i++ ) {
-        std::cout << space(W,N,i) << "\n";
-    }
+    std::cout << prior(W,N,1,1) << "\n";
+    std::cout << likelihood(distance,W,N) << "\n";
 
     waitKey(0);                                
     return 0;
