@@ -1,3 +1,5 @@
+// See section "17.2 Snakes" in 
+//
 // @BOOK{princeCVMLI2012,
 // author = {Prince, S.J.D.},
 // title= {{Computer Vision: Models Learning and Inference}},
@@ -10,16 +12,14 @@
 #include <iostream>
 #include <cmath>
 
-using namespace cv;
-using namespace std;
 
 double distance_from_edge( const cv::Mat& distance_img, const cv::Point2d w)
 {
     if ( w.y >= distance_img.rows || w.x >= distance_img.cols ) {
         double minVal; 
         double maxVal; 
-        Point minLoc; 
-        Point maxLoc;
+        cv::Point minLoc; 
+        cv::Point maxLoc;
         cv::minMaxLoc( distance_img, &minVal, &maxVal, &minLoc, &maxLoc );
         return (pow(w.y,2)+pow(w.x,2))*maxVal;
     }
@@ -70,31 +70,37 @@ double likelihood(const cv::Mat& distance_img, const W_t& W, const size_t& N)
     return result;
 }
 
+// Formula 17.7
+double cost(const cv::Mat& distance_img, const W_t& W, const size_t& N,const double& alpha, const double& beta)
+{
+    return log(likelihood(distance_img,W,N)) + log(prior(W,N,alpha,beta));
+}
+
 int main( int argc, char** argv )
 {
     if( argc != 2)
     {
-     cout <<" Usage: display_image ImageToLoadAndDisplay" << endl;
+     std::cout <<" Usage: display_image ImageToLoadAndDisplay" << "\n";
      return -1;
     }
 
-    Mat image;
-    image = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
+    cv::Mat image;
+    image = cv::imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
 
     if(! image.data )                              
     {
-        cout <<  "Could not open or find the image" << std::endl ;
+        std::cout <<  "Could not open or find the image" << "\n";
         return -1;
     }
 
-    namedWindow( "image", WINDOW_AUTOSIZE );
-    imshow( "image", image );                  
+    cv::namedWindow( "image", cv::WINDOW_AUTOSIZE );
+    cv::imshow( "image", image );                  
 
     cv::Mat edges;
     cv::Canny(image,edges,100,200);
 
-    namedWindow( "edges", WINDOW_AUTOSIZE );
-    imshow( "edges", edges );                  
+    cv::namedWindow( "edges", cv::WINDOW_AUTOSIZE );
+    cv::imshow( "edges", edges );                  
 
     cv::Mat distance(edges.rows,edges.cols,CV_32FC1);
     cv::distanceTransform(255-edges,distance,  CV_DIST_C,CV_DIST_MASK_PRECISE);
@@ -102,10 +108,10 @@ int main( int argc, char** argv )
     assert(32==4*sizeof(double));
 
     cv::Mat normalized_dist;
-    cv::normalize(distance, normalized_dist, 0.0, 1.0, NORM_MINMAX);
+    cv::normalize(distance, normalized_dist, 0.0, 1.0, cv::NORM_MINMAX);
 
-    namedWindow( "distance", WINDOW_AUTOSIZE );
-    imshow( "distance", normalized_dist );    
+    cv::namedWindow( "distance", cv::WINDOW_AUTOSIZE );
+    cv::imshow( "distance", normalized_dist );    
 
     std::vector<cv::Vec3f> circles;
     cv::HoughCircles( edges, circles, CV_HOUGH_GRADIENT, 1, 10, 200, 25, 0, 0 );
@@ -137,15 +143,15 @@ int main( int argc, char** argv )
     W[N+1] = W[1];
 
     for ( size_t i = 1; i <= N; i++ ) {
-        circle( hough, W[i], 3, Scalar(255,255,255));
+        circle( hough, W[i], 3, cv::Scalar(255,255,255));
     }
 
-    namedWindow( "circles", WINDOW_AUTOSIZE );
-    imshow( "circles", hough );
+    cv::namedWindow( "circles", cv::WINDOW_AUTOSIZE );
+    cv::imshow( "circles", hough );
 
     std::cout << prior(W,N,1,1) << "\n";
     std::cout << likelihood(distance,W,N) << "\n";
 
-    waitKey(0);                                
+    cv::waitKey(0);                                
     return 0;
 }
