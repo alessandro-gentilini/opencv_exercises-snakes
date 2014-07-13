@@ -13,6 +13,8 @@
 \title{snakes}
 \author{Alessandro Gentilini\thanks{alessandro.gentilini@gmail.com}}
 
+\DeclareMathOperator*{\argmax}{arg\,max}
+
 
 \begin{document}
 \maketitle
@@ -21,9 +23,59 @@
 snakes
 \end{abstract} 
 
-\section{Snakes}
+\section{Inference for Snakes}
+The likelihood is formula (17.3)
+\begin{equation}
+Pr(\mathbf{x}\vert\mathbf{W})\propto \prod_{n=1}^N \exp{[-(\text{dist}[\mathbf{x},\mathbf{w}_n])^2]}
+\end{equation}
 
+The prior is formula (17.4)
+\begin{equation}
+Pr(\mathbf{W})\propto \prod_{n=1}^N \exp{[\alpha \text{space}[\mathbf{w},n]+\beta \text{curve}[\mathbf{w},n]]}
+\end{equation}
 
-If $C$ is a full deck of cvards, does ${D_{2}}^{'}(C)$ have a cycle? We leave 
+The inference is 
+\begin{equation}
+\argmax_{\mathbf{W}}[Pr(\mathbf{W}\vert\mathbf{x})] = 
+\argmax_{\mathbf{W}}[Pr(\mathbf{x}\vert\mathbf{W})Pr(\mathbf{W})]
+\end{equation}
+
+Since $\log$ is monotone I can write
+\begin{equation}
+\begin{split}
+\argmax_{\mathbf{W}}[Pr(\mathbf{W}\vert\mathbf{x})] & = 
+\argmax_{\mathbf{W}}[\log{[Pr(\mathbf{W}\vert\mathbf{x})]}] \\
+& = \argmax_{\mathbf{W}}[\log{[Pr(\mathbf{x}\vert\mathbf{W})Pr(\mathbf{W})]}]
+\end{split}
+\end{equation}
+
+\begin{equation}
+\argmax_{\mathbf{W}}[\log{[Pr(\mathbf{W}\vert\mathbf{x})]}] = 
+\argmax_{\mathbf{W}}[\log{[Pr(\mathbf{x}\vert\mathbf{W})Pr(\mathbf{W})]}]
+\end{equation}
+
+\begin{equation}
+\argmax_{\mathbf{W}}[\log{[Pr(\mathbf{W}\vert\mathbf{x})]}] = 
+\argmax_{\mathbf{W}}[\log{[Pr(\mathbf{x}\vert\mathbf{W})]}+\log{[Pr(\mathbf{W})]}]
+\end{equation}
+
+\begin{equation}
+\log{[Pr(\mathbf{x}\vert\mathbf{W})]}= \log{[\prod_{n=1}^N \exp{[-(\text{dist}[\mathbf{x},\mathbf{w}_n])^2]}]}
+\end{equation}
+
+\begin{equation}
+\log{[\prod_{n=1}^N \exp{[-(\text{dist}[\mathbf{x},\mathbf{w}_n])^2]}]}=\sum_{n=1}^N \log{[\exp{[-(\text{dist}[\mathbf{x},\mathbf{w}_n])^2]}]}
+\end{equation}
+
+\begin{equation}
+\sum_{n=1}^N \log{[\exp{[-(\text{dist}[\mathbf{x},\mathbf{w}_n])^2]}]}=\sum_{n=1}^N -(\text{dist}[\mathbf{x},\mathbf{w}_n])^2
+\end{equation}
+
+\begin{equation}
+\begin{split}
+a & = b \\
+  & = c
+\end{split}  
+\end{equation}
 
 \end{document}
