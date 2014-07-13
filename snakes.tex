@@ -53,12 +53,27 @@ Since $\log$ is monotone I can write
 And so for what regard the likelihood I can write:
 \begin{equation}
 \begin{split}
-\log{[Pr(\mathbf{x}\vert\mathbf{W})]} & = \log{[\prod_{n=1}^N \exp{[-(\text{dist}[\mathbf{x},\mathbf{w}_n])^2]}]} \\
+\log{[Pr(\mathbf{x}\vert\mathbf{W})]} & \propto \log{[\prod_{n=1}^N \exp{[-(\text{dist}[\mathbf{x},\mathbf{w}_n])^2]}]} \\
 & =\sum_{n=1}^N \log{[\exp{[-(\text{dist}[\mathbf{x},\mathbf{w}_n])^2]}]} \\
 & =\sum_{n=1}^N -(\text{dist}[\mathbf{x},\mathbf{w}_n])^2
 \end{split}
 \end{equation}
 
+And for what regard the prior I can write:
+\begin{equation}
+\begin{split}
+\log{[Pr(\mathbf{W})]} & \propto \log{[\prod_{n=1}^N \exp{[\alpha \text{space}[\mathbf{w},n]+\beta \text{curve}[\mathbf{w},n]]}]} \\
+& = \sum_{n=1}^N \log{[\exp{[\alpha \text{space}[\mathbf{w},n]+\beta \text{curve}[\mathbf{w},n]]}]} \\
+& = \sum_{n=1}^N \alpha \text{space}[\mathbf{w},n]+\beta \text{curve}[\mathbf{w},n]
+\end{split}
+\end{equation}
+
+And finally
+\begin{equation}
+\begin{split}
+\argmax_{\mathbf{W}}[\log{[Pr(\mathbf{W}\vert\mathbf{x})]}] = \argmax_{\mathbf{W}}[\sum_{n=1}^N -(\text{dist}[\mathbf{x},\mathbf{w}_n])^2+\alpha \text{space}[\mathbf{w},n]+\beta \text{curve}[\mathbf{w},n]]\\
+\end{split}
+\end{equation}
 
 
 \end{document}
