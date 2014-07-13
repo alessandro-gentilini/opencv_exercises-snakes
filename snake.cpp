@@ -1,10 +1,12 @@
-// See section "17.2 Snakes" in 
+// Snakes (active contours) implemented with OpenCV.
 //
-// @BOOK{princeCVMLI2012,
-// author = {Prince, S.J.D.},
-// title= {{Computer Vision: Models Learning and Inference}},
-// publisher = {{Cambridge University Press}},
-// year = 2012}
+// Author: Alessandro Gentilini - 2014
+//
+// Following the Bayesian approach described in "17.2 Snakes" of:
+//
+// Prince, S.J.D.
+// [*Computer Vision: Models Learning and Inference*](http://web4.cs.ucl.ac.uk/staff/s.prince/book/book.pdf),
+// Cambridge University Press, 2012
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
