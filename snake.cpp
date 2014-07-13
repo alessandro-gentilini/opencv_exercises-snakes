@@ -79,7 +79,7 @@ double space(const W_t& W, const size_t& N, const size_t& n)
     }
     consecutive_distance_average /= N;
     double result = -pow(consecutive_distance_average-vector_norm2(W[n]-W[n-1]),2);
-    std::cout << "space\t" << result << "\n";
+    //std::cout << "space\t" << result << "\n";
     return result;
 }
 
@@ -87,7 +87,7 @@ double space(const W_t& W, const size_t& N, const size_t& n)
 double curve(const W_t& W, const size_t& n)
 {
     double result = -pow(vector_norm2(W[n-1]-2*W[n]+W[n+1]),2);
-    std::cout << "curve\t" << result << "\n";
+    //std::cout << "curve\t" << result << "\n";
     return result;
 }
 
@@ -98,7 +98,7 @@ double prior(const W_t& W, const size_t& N, const double& alpha, const double& b
     for ( size_t n = 1; n <= N; n++ ) {
         result *= exp(alpha*space(W,N,n)+beta*curve(W,n));
     }
-    std::cout << "prior\t" << result << "\n";
+    //std::cout << "prior\t" << result << "\n";
     return result;
 }
 
@@ -109,13 +109,13 @@ double likelihood(const cv::Mat& distance_img, const W_t& W, const size_t& N)
     for ( size_t n = 1; n <= N; n++ ) {
         double d = distance_from_edge(distance_img,W[n]);
         result *= exp(-pow(d,2));;
-        std::cout << "likelihood d\t" << d << "\t" << -pow(d,2) << "\n";
+        //std::cout << "likelihood d\t" << d << "\t" << -pow(d,2) << "\n";
     }
     return result;
 }
 
 // Formula 17.7
-double cost(const cv::Mat& distance_img, const W_t& W, const size_t& N,const double& alpha, const double& beta)
+double cost(const W_t& W, const cv::Mat& distance_img, const size_t& N,const double& alpha, const double& beta)
 {
     return log(likelihood(distance_img,W,N)) + log(prior(W,N,alpha,beta));
 }
@@ -165,7 +165,7 @@ int main( int argc, char** argv )
     std::vector<cv::Vec3f> circles;
     cv::HoughCircles( edges, circles, CV_HOUGH_GRADIENT, 1, 10, 200, 25, 0, 0 );
 
-    std::cout << circles.size() << "\n";
+    //std::cout << circles.size() << "\n";
 
     //for( size_t i = 0; i < circles.size(); i++ )
     cv::Mat hough = image.clone();
@@ -181,7 +181,7 @@ int main( int argc, char** argv )
     const size_t selected_circle = 1;
     cv::Point2d w_center(circles[selected_circle][0],circles[selected_circle][1]);
     double radius = circles[selected_circle][2];
-    const size_t N = 10;
+    const size_t N = 30;
     W_t W(N+2);
     for ( size_t i = 1; i <= N; i++ ) {
         const double a = i*2*M_PI/N;
@@ -198,8 +198,11 @@ int main( int argc, char** argv )
     cv::namedWindow( "circles", cv::WINDOW_AUTOSIZE );
     cv::imshow( "circles", hough );
 
-    std::cout << prior(W,N,1,1) << "\n";
-    std::cout << likelihood(distance,W,N) << "\n";
+    double alpha = 0.5;
+    double beta = 0.5;
+    std::cout << "prior\t" << prior(W,N,alpha,beta) << "\n";
+    std::cout << "likelihood\t" << likelihood(distance,W,N) << "\n";
+    std::cout << "cost\t" << cost(W,distance,N,alpha,beta) << "\n";
 
     cv::waitKey(0);                                
     return 0;
