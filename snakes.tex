@@ -45,37 +45,20 @@ Since $\log$ is monotone I can write
 \begin{split}
 \argmax_{\mathbf{W}}[Pr(\mathbf{W}\vert\mathbf{x})] & = 
 \argmax_{\mathbf{W}}[\log{[Pr(\mathbf{W}\vert\mathbf{x})]}] \\
-& = \argmax_{\mathbf{W}}[\log{[Pr(\mathbf{x}\vert\mathbf{W})Pr(\mathbf{W})]}]
+& = \argmax_{\mathbf{W}}[\log{[Pr(\mathbf{x}\vert\mathbf{W})Pr(\mathbf{W})]}] \\
+& = \argmax_{\mathbf{W}}[\log{[Pr(\mathbf{x}\vert\mathbf{W})]}+\log{[Pr(\mathbf{W})]}]
 \end{split}
 \end{equation}
 
-\begin{equation}
-\argmax_{\mathbf{W}}[\log{[Pr(\mathbf{W}\vert\mathbf{x})]}] = 
-\argmax_{\mathbf{W}}[\log{[Pr(\mathbf{x}\vert\mathbf{W})Pr(\mathbf{W})]}]
-\end{equation}
-
-\begin{equation}
-\argmax_{\mathbf{W}}[\log{[Pr(\mathbf{W}\vert\mathbf{x})]}] = 
-\argmax_{\mathbf{W}}[\log{[Pr(\mathbf{x}\vert\mathbf{W})]}+\log{[Pr(\mathbf{W})]}]
-\end{equation}
-
-\begin{equation}
-\log{[Pr(\mathbf{x}\vert\mathbf{W})]}= \log{[\prod_{n=1}^N \exp{[-(\text{dist}[\mathbf{x},\mathbf{w}_n])^2]}]}
-\end{equation}
-
-\begin{equation}
-\log{[\prod_{n=1}^N \exp{[-(\text{dist}[\mathbf{x},\mathbf{w}_n])^2]}]}=\sum_{n=1}^N \log{[\exp{[-(\text{dist}[\mathbf{x},\mathbf{w}_n])^2]}]}
-\end{equation}
-
-\begin{equation}
-\sum_{n=1}^N \log{[\exp{[-(\text{dist}[\mathbf{x},\mathbf{w}_n])^2]}]}=\sum_{n=1}^N -(\text{dist}[\mathbf{x},\mathbf{w}_n])^2
-\end{equation}
-
+And so for what regard the likelihood I can write:
 \begin{equation}
 \begin{split}
-a & = b \\
-  & = c
-\end{split}  
+\log{[Pr(\mathbf{x}\vert\mathbf{W})]} & = \log{[\prod_{n=1}^N \exp{[-(\text{dist}[\mathbf{x},\mathbf{w}_n])^2]}]} \\
+& =\sum_{n=1}^N \log{[\exp{[-(\text{dist}[\mathbf{x},\mathbf{w}_n])^2]}]} \\
+& =\sum_{n=1}^N -(\text{dist}[\mathbf{x},\mathbf{w}_n])^2
+\end{split}
 \end{equation}
+
+
 
 \end{document}
