@@ -67,13 +67,42 @@ And for what regard the prior I can write:
 & = \sum_{n=1}^N \alpha \text{space}[\mathbf{w},n]+\beta \text{curve}[\mathbf{w},n]
 \end{split}
 \end{equation}
+with $\alpha\geq0$ and $\beta\geq0$.\\
 
-And finally
+Finally the inference is:
 \begin{equation}
 \begin{split}
-\argmax_{\mathbf{W}}[\log{[Pr(\mathbf{W}\vert\mathbf{x})]}] = \argmax_{\mathbf{W}}[\sum_{n=1}^N -(\text{dist}[\mathbf{x},\mathbf{w}_n])^2+\alpha \text{space}[\mathbf{w},n]+\beta \text{curve}[\mathbf{w},n]]\\
+\argmax_{\mathbf{W}}[\log{[Pr(\mathbf{W}\vert\mathbf{x})]}] = \argmax_{\mathbf{W}}[\sum_{n=1}^N -(\text{dist}[\mathbf{x},\mathbf{w}_n])^2+\alpha \text{space}[\mathbf{w},n]+\beta \text{curve}[\mathbf{w},n]]
 \end{split}
 \end{equation}
+
+The spacing term is formula (17.5)
+\begin{equation}
+\text{space}[\mathbf{w},n]= - \left(\frac{\sum_{n=1}^N \sqrt{\left( \mathbf{w}_{n}-\mathbf{w}_{n-1} \right)^T\left( \mathbf{w}_{n}-\mathbf{w}_{n-1} \right)}}{N} - \sqrt{\left( \mathbf{w}_{n}-\mathbf{w}_{n-1} \right)^T\left( \mathbf{w}_{n}-\mathbf{w}_{n-1} \right)}\right)^2
+\end{equation}
+and it is always nonpositive because it is a square and because of the leading minus.\\
+
+The curvature term is formula (17.6)
+\begin{equation}
+\text{curve}[\mathbf{w},n]= - \left(\mathbf{w}_{n-1}-2\mathbf{w}_{n}+\mathbf{w}_{n+1}\right)^T\left(\mathbf{w}_{n-1}-2\mathbf{w}_{n}+\mathbf{w}_{n+1}\right)
+\end{equation}
+and it is always nonpositive because o the leading minus and because $\mathbf{x}^T\mathbf{x}=\|\mathbf{x}\|^2$ and so it is always nonnegative since it is the square of the ($\ell^2$)norm.\\
+
+With these new definitions 
+\begin{equation}
+\begin{split}
+\text{d}[\mathbf{x},\mathbf{w}_n]&=(\text{dist}[\mathbf{x},\mathbf{w}_n])^2\\
+\text{s}[\mathbf{w},n]&=-\alpha\text{space}[\mathbf{w},n]\\
+\text{c}[\mathbf{w},n]&=-\beta\text{curve}[\mathbf{w},n]
+\end{split}
+\end{equation}
+we have that $\text{d}[\mathbf{x},\mathbf{w}_n]$, $\text{s}[\mathbf{w},n]$ and $\text{c}[\mathbf{w},n]$ are all nonnegative
+and the inference formula can be rewritten as
+\begin{equation}
+\argmax_{\mathbf{W}}[\log{[Pr(\mathbf{W}\vert\mathbf{x})]}] = -\argmax_{\mathbf{W}}[\sum_{n=1}^N \text{d}[\mathbf{x},\mathbf{w}_n]+\text{s}[\mathbf{w},n]+\text{c}[\mathbf{w},n]]
+\end{equation}
+and now the argument of $\argmax$ is nonnegative.
+
 
 
 \end{document}
